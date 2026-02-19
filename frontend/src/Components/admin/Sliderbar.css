@@ -1,0 +1,30 @@
+.sidebar {
+  width: 220px;
+  background: #1f2937;
+  min-height: calc(100vh - 70px);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.admin-icon {
+  width: 30px;
+  height: auto;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.sidebar button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #374151;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  text-align: left;
+}
+
+.sidebar button:hover {
+  background: #2563eb;
+}

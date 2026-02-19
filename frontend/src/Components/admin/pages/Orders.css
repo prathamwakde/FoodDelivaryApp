@@ -1,0 +1,117 @@
+/* ===== MAIN CONTAINER ===== */
+.orders-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.orders-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #222;
+}
+
+/* ===== ORDER CARD ===== */
+.order-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: 0.25s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== TOP SECTION ===== */
+.order-main {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.order-main img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.order-main h4 {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+}
+
+/* ===== STATUS ===== */
+.order-main span {
+  background: #ffcc00;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===== TEXT INFO ===== */
+.order-card p {
+  margin: 6px 0;
+  color: #555;
+  font-size: 15px;
+}
+
+/* ===== PRICE ===== */
+.order-card p:last-of-type {
+  font-weight: 600;
+  color: #111;
+}
+
+/* ===== DELETE BUTTON ===== */
+.delete-order-btn {
+  margin-top: 12px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #ff4d4d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.delete-order-btn:hover {
+  background: #e63939;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .orders-container {
+    padding: 10px;
+  }
+
+  .order-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-top img {
+    width: 100%;
+    height: 180px;
+  }
+
+  .order-top h4 {
+    font-size: 16px;
+  }
+
+  .order-top span {
+    align-self: flex-start;
+  }
+}

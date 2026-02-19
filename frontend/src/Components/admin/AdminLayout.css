@@ -1,0 +1,15 @@
+.admin-panel {
+  min-height: 100vh;
+  background: #f4f6f9;
+}
+
+/* BODY */
+.admin-body {
+  display: flex;
+}
+
+/* CONTENT */
+.admin-content {
+  flex: 1;
+  padding: 20px;
+}

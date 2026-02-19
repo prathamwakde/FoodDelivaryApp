@@ -1,0 +1,61 @@
+.menu-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.menu-heading h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #181717;
+  margin-top: 2rem;
+}
+
+.filter-continer {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 130px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.filter-btn:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.filter-btn img {
+  width: 200px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.filter-btn span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.5px;
+}
+
+.filter-btn.active {
+  background: #ff4d4d;
+  border-color: #ff4d4d;
+}
+
+.filter-btn.active span {
+  color: #fff;
+}
