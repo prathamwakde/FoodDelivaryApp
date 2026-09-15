@@ -15,6 +15,7 @@ const Cart = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
   const [alertType, setAlertType] = useState("success");
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -39,16 +40,7 @@ const Cart = () => {
   };
 
   // ================= CHECKOUT =================
- const handleCheckout = async () => {
-  try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      showCustomAlert("Login first", "error");
-      return;
-    }
-
-    // Define order data
+  const createFoodOrder = async (token) => {
     const orderData = {
       items: cartItems.map((item) => ({
         food: item.foodId,
@@ -80,15 +72,96 @@ const Cart = () => {
 
     if (data.success) {
       showCustomAlert("Order placed ✅", "success");
-      // Optionally, you can clear the cart or redirect here
     } else {
-      showCustomAlert(data.message || "Order failed", "error");
+      throw new Error(data.message || "Order failed");
     }
-  } catch (error) {
-    console.error("Checkout Error:", error);
-    showCustomAlert("Server Error", "error");
-  }
-};
+  };
+
+  const handleCheckout = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      showCustomAlert("Login first", "error");
+      return;
+    }
+
+    if (!window.Razorpay) {
+      showCustomAlert("Payment service is unavailable", "error");
+      return;
+    }
+
+    setIsCheckingOut(true);
+
+    try {
+      const orderResponse = await fetch("http://localhost:8000/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: Math.round((totalPrice + 40) * 100),
+          currency: "INR",
+        }),
+      });
+      const orderData = await orderResponse.json();
+
+      if (!orderResponse.ok || !orderData.success) {
+        throw new Error(orderData.message || "Unable to start payment");
+      }
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Food Delivary App",
+        description: "Food order payment",
+        order_id: orderData.order_id,
+        handler: async (response) => {
+          try {
+            const verifyResponse = await fetch(
+              "http://localhost:8000/api/verify-payment",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response),
+              }
+            );
+            const verifyData = await verifyResponse.json();
+
+            if (!verifyResponse.ok || !verifyData.success) {
+              throw new Error(verifyData.message || "Payment verification failed");
+            }
+
+            await createFoodOrder(token);
+          } catch (error) {
+            console.error("Payment verification error:", error);
+            showCustomAlert(error.message || "Payment verification failed", "error");
+          } finally {
+            setIsCheckingOut(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setIsCheckingOut(false);
+            showCustomAlert("Payment cancelled", "warning");
+          },
+        },
+        theme: { color: "#ff6347" },
+      };
+
+      const paymentWindow = new window.Razorpay(options);
+      paymentWindow.on("payment.failed", (response) => {
+        setIsCheckingOut(false);
+        showCustomAlert(
+          response.error?.description || "Payment failed",
+          "error"
+        );
+      });
+      paymentWindow.open();
+    } catch (error) {
+      console.error("Checkout Error:", error);
+      setIsCheckingOut(false);
+      showCustomAlert(error.message || "Server Error", "error");
+    }
+  };
 
   // ================= UI =================
   return (
@@ -179,8 +252,12 @@ const Cart = () => {
             <span>₹ {totalPrice + 40}</span>
           </div>
 
-          <button className="checkout-btn" onClick={handleCheckout}>
-            Proceed To Checkout
+          <button
+            className="checkout-btn"
+            onClick={handleCheckout}
+            disabled={isCheckingOut || cartItems.length === 0}
+          >
+            {isCheckingOut ? "Processing..." : "Proceed To Checkout"}
           </button>
         </div>
       </div>
